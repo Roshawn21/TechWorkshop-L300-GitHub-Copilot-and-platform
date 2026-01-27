@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: zava-storefront
+metadata:
+  template: azd-terraform
+
+# Infrastructure configuration
+infra:
+  provider: terraform
+  path: ./infra
+
+# Services configuration
+services:
+  web:
+    project: ./src
+    host: appservice
+    language: dotnet
+    
+    # Container-based deployment
+    docker:
+      path: ./src/Dockerfile
+      context: ./src
+
+# Hooks for custom workflows
+hooks:
+  # Pre-provision: Validate Terraform
+  preprovision:
+    shell: pwsh
+    run: |
+      Write-Host "Validating Terraform configuration..."
+      Push-Location ./infra
+      terraform init -backend=false
+      terraform validate
+      Pop-Location
+      Write-Host "Terraform validation complete."
+
+  # Post-provision: Display deployment info
+  postprovision:
+    shell: pwsh
+    run: |
+      Write-Host "=== Deployment Complete ===" -ForegroundColor Green
+      Write-Host "App URL: $env:AZURE_APP_SERVICE_URL"
+      Write-Host "ACR Server: $env:AZURE_CONTAINER_REGISTRY_LOGIN_SERVER"
+      Write-Host ""
+      Write-Host "Azure Portal: https://portal.azure.com/#@/resource/subscriptions/$env:AZURE_SUBSCRIPTION_ID/resourceGroups/$env:AZURE_RESOURCE_GROUP"
+
+  # Pre-deploy: Build and push container
+  predeploy:
+    shell: pwsh
+    run: |
+      Write-Host "Building and pushing container to ACR..."
+      $acrName = $env:AZURE_CONTAINER_REGISTRY_NAME
+      az acr build --registry $acrName --image zavastorefront:latest ./src
+
+# Pipeline configuration for CI/CD
+pipeline:
+  provider: github
