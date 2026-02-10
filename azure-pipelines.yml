@@ -171,4 +171,7 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
-                      az webapp restart --name $(app_service_name) --resource-group $(terraform output -raw resource_group_name)
+                      cd infra/terraform
+                      APP_NAME=$(terraform output -raw app_service_name)
+                      RG_NAME=$(terraform output -raw resource_group_name)
+                      az webapp restart --name $APP_NAME --resource-group $RG_NAME

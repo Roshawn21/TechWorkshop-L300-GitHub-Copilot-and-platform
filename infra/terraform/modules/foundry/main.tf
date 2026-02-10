@@ -1,8 +1,15 @@
 # Microsoft Foundry is Azure AI Foundry (formerly Azure AI Studio)
 # This creates an AI Hub and associated resources
 
+locals {
+  # Storage account name: lowercase, alphanumeric only, 3-24 chars
+  storage_name = lower(replace(substr(var.foundry_name, 0, 20), "-", ""))
+  # Key Vault name: alphanumeric and hyphens, 3-24 chars
+  kv_name = substr(var.foundry_name, 0, 21)
+}
+
 resource "azurerm_storage_account" "foundry_storage" {
-  name                     = replace(lower("${var.foundry_name}sa"), "-", "")
+  name                     = "${local.storage_name}sa"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
@@ -11,7 +18,7 @@ resource "azurerm_storage_account" "foundry_storage" {
 }
 
 resource "azurerm_key_vault" "foundry_kv" {
-  name                       = "${var.foundry_name}-kv"
+  name                       = "${local.kv_name}-kv"
   location                   = var.location
   resource_group_name        = var.resource_group_name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
