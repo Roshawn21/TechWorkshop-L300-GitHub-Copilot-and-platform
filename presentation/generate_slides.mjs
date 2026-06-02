@@ -78,6 +78,12 @@ function badge(slide, x, y, text, color) {
     { text: "2.  Commit & push to GitHub\n", options: { breakLine: true } },
     { text: "3.  Watch GitHub Actions build it live", options: {} },
   ], { x: 0.8, y: 4.9, w: 11.5, h: 1.6, fontFace: FONT, fontSize: 20, color: C.text, lineSpacingMultiple: 1.3 });
+
+  // Presenter
+  s.addText([
+    { text: "Roshawn Reid\n", options: { bold: true, color: C.blue, fontSize: 18, breakLine: true } },
+    { text: "Solution Engineer", options: { color: C.muted, fontSize: 14 } },
+  ], { x: 7.8, y: 6.35, w: 4.9, h: 0.8, fontFace: FONT, align: "right", valign: "bottom", lineSpacingMultiple: 1.1 });
 }
 
 // ---------- Slide 2: Agenda ----------
