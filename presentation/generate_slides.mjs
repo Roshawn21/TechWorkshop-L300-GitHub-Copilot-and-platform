@@ -72,18 +72,11 @@ function badge(slide, x, y, text, color) {
     { text: "GitHub Actions", options: { color: C.green, bold: true } },
   ], { x: 0.7, y: 3.25, w: 12, h: 0.8, fontFace: FONT, fontSize: 30 });
 
-  s.addText("Today's demo", { x: 0.7, y: 4.5, w: 6, h: 0.4, fontFace: FONT, fontSize: 14, bold: true, color: C.muted });
+  // Presenter (centered, under the title)
   s.addText([
-    { text: "1.  Generate a CI workflow with a Copilot agent — in VS Code\n", options: { breakLine: true } },
-    { text: "2.  Commit & push to GitHub\n", options: { breakLine: true } },
-    { text: "3.  Watch GitHub Actions build it live", options: {} },
-  ], { x: 0.8, y: 4.9, w: 11.5, h: 1.6, fontFace: FONT, fontSize: 20, color: C.text, lineSpacingMultiple: 1.3 });
-
-  // Presenter
-  s.addText([
-    { text: "Roshawn Reid\n", options: { bold: true, color: C.blue, fontSize: 18, breakLine: true } },
-    { text: "Solution Engineer", options: { color: C.muted, fontSize: 14 } },
-  ], { x: 7.8, y: 6.35, w: 4.9, h: 0.8, fontFace: FONT, align: "right", valign: "bottom", lineSpacingMultiple: 1.1 });
+    { text: "Roshawn Reid\n", options: { bold: true, color: C.blue, fontSize: 20, breakLine: true } },
+    { text: "Solution Engineer", options: { color: C.muted, fontSize: 15 } },
+  ], { x: 0.7, y: 4.6, w: 12, h: 1.0, fontFace: FONT, align: "center", valign: "top", lineSpacingMultiple: 1.15 });
 }
 
 // ---------- Slide 2: Agenda ----------
