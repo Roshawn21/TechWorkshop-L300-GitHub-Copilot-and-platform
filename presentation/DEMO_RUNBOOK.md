@@ -18,10 +18,13 @@ push it, and watch GitHub Actions run it live.
 
 ---
 
-## 1 · Frame it with the slides (~1–2 min)
-- **Slide 1 — Title / Agenda:** the three-step story.
-- **Slide 2 — Copilot:** completions → chat → **agents** (delegate whole tasks).
-- **Slide 3 — Actions:** events → workflows → jobs/steps → runners. Land the tie-in:
+## 1 · Frame it with the slides (~2–3 min)
+- **Slide 1 — Title:** the "From Prompt to Production" framing.
+- **Slide 2 — Agenda:** Copilot → Customizing Copilot → Actions → Live demo.
+- **Slide 3 — Copilot:** completions → chat → **agents** (delegate whole tasks).
+- **Slide 4 — Customizing Copilot (Primitives):** instructions, prompts, skills, custom agents, MCP,
+  hooks, memory — how Copilot gets grounded in *this* repo.
+- **Slide 5 — Actions:** events → workflows → jobs/steps → runners. Land the tie-in:
   *"Copilot writes the YAML, Actions runs it."*
 
 ## 2 · Generate the workflow in VS Code (~3–4 min)

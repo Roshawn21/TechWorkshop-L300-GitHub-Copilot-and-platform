@@ -56,7 +56,7 @@ function badge(slide, x, y, text, color) {
   });
 }
 
-// ---------- Slide 1: Title / Agenda ----------
+// ---------- Slide 1: Title ----------
 {
   const s = pptx.addSlide();
   base(s, C.blue);
@@ -80,7 +80,31 @@ function badge(slide, x, y, text, color) {
   ], { x: 0.8, y: 4.9, w: 11.5, h: 1.6, fontFace: FONT, fontSize: 20, color: C.text, lineSpacingMultiple: 1.3 });
 }
 
-// ---------- Slide 2: GitHub Copilot ----------
+// ---------- Slide 2: Agenda ----------
+{
+  const s = pptx.addSlide();
+  base(s, C.blue);
+  badge(s, 0.7, 0.6, "AGENDA", C.blue);
+  s.addText("What we'll cover", {
+    x: 0.7, y: 1.15, w: 12, h: 0.9, fontFace: FONT, fontSize: 36, bold: true, color: C.text,
+  });
+
+  const agenda = [
+    ["01", "GitHub Copilot", "Your AI pair programmer — completions, chat, and agents.", C.purple],
+    ["02", "Customizing Copilot", "The primitives that ground Copilot in your repo and team.", C.blue],
+    ["03", "GitHub Actions", "CI/CD native to GitHub — events, workflows, runners.", C.green],
+    ["04", "Live demo", "Generate a workflow with an agent, push it, watch it run.", C.text],
+  ];
+  agenda.forEach((it, i) => {
+    const y = 2.45 + i * 1.05;
+    s.addText(it[0], { x: 0.7, y, w: 1.0, h: 0.9, fontFace: FONT, fontSize: 34, bold: true, color: it[3], valign: "middle" });
+    s.addShape("line", { x: 1.85, y: y + 0.05, w: 0, h: 0.8, line: { color: C.border, width: 1.5 } });
+    s.addText(it[1], { x: 2.1, y: y + 0.02, w: 10.5, h: 0.5, fontFace: FONT, fontSize: 20, bold: true, color: C.text });
+    s.addText(it[2], { x: 2.1, y: y + 0.5, w: 10.5, h: 0.4, fontFace: FONT, fontSize: 14, color: C.muted });
+  });
+}
+
+// ---------- Slide 3: GitHub Copilot ----------
 {
   const s = pptx.addSlide();
   base(s, C.purple);
@@ -109,7 +133,57 @@ function badge(slide, x, y, text, color) {
   });
 }
 
-// ---------- Slide 3: GitHub Actions ----------
+// ---------- Slide 4: Customization Primitives ----------
+{
+  const s = pptx.addSlide();
+  base(s, C.blue);
+  badge(s, 0.7, 0.5, "PRIMITIVES", C.blue);
+  s.addText("Customizing Copilot for your repo", {
+    x: 0.7, y: 1.0, w: 12, h: 0.7, fontFace: FONT, fontSize: 30, bold: true, color: C.text,
+  });
+
+  const head = ["Primitive", "Primary Job", "Where It Enters the Loop", "Best Used For"];
+  const rows = [
+    ["Always-on Instructions", "Base defaults", "Context assembly", "Team-wide conventions and stack choices"],
+    ["File-based Instructions", "Scoped defaults", "Context assembly for matching files", "Path-specific rules"],
+    ["Prompts", "Explicit task framing", "Task shaping", "User-invoked templates"],
+    ["Skills", "Reusable procedure", "Task shaping and decision support", "Repeatable, discoverable workflows"],
+    ["Custom Agents", "Persistent role and posture", "Task shaping across a conversation", "Reviewer, architect, deployer, mentor modes"],
+    ["MCP", "External reach", "Action selection and tool execution", "APIs, databases, issue trackers, internal systems"],
+    ["Hooks", "Enforcement and audit", "Lifecycle boundaries around execution", "Deny, inspect, log, or constrain risky actions"],
+    ["Memory", "Learned repo knowledge", "Context assembly and reasoning", "Patterns hard to author but easy to observe"],
+  ];
+
+  const headerRow = head.map((h) => ({
+    text: h,
+    options: { bold: true, color: C.canvas, fill: { color: C.blue }, fontSize: 12, valign: "middle" },
+  }));
+  const bodyRows = rows.map((r, i) => {
+    const rowFill = i % 2 === 0 ? C.surface : C.canvas;
+    return r.map((cell, c) => ({
+      text: cell,
+      options: {
+        color: c === 0 ? C.blue : C.text,
+        bold: c === 0,
+        fill: { color: rowFill },
+        fontSize: 11,
+        valign: "middle",
+      },
+    }));
+  });
+
+  s.addTable([headerRow, ...bodyRows], {
+    x: 0.6, y: 1.85, w: 12.1, h: 5.0,
+    colW: [2.5, 2.4, 3.5, 3.7],
+    border: { type: "solid", color: C.border, pt: 1 },
+    fontFace: FONT,
+    align: "left",
+    margin: [3, 5, 3, 5],
+    autoPage: false,
+  });
+}
+
+// ---------- Slide 5: GitHub Actions ----------
 {
   const s = pptx.addSlide();
   base(s, C.green);
