@@ -76,7 +76,7 @@ function badge(slide, x, y, text, color) {
   s.addText([
     { text: "Roshawn Reid\n", options: { bold: true, color: C.blue, fontSize: 20, breakLine: true } },
     { text: "Solution Engineer", options: { color: C.muted, fontSize: 15 } },
-  ], { x: 0.7, y: 4.2, w: 12, h: 1.0, fontFace: FONT, align: "left", valign: "top", lineSpacingMultiple: 1.15 });
+  ], { x: 0.7, y: 4.2, w: 12, h: 1.0, fontFace: FONT, align: "left", valign: "top", lineSpacingMultiple: 0.9 });
 }
 
 // ---------- Slide 2: Agenda ----------
