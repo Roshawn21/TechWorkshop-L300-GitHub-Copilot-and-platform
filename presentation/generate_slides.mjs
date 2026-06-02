@@ -60,8 +60,8 @@ function badge(slide, x, y, text, color) {
 {
   const s = pptx.addSlide();
   base(s, C.blue);
-  ghMark(s, 0.7, 0.7, 0.9, C.white);
-  s.addText("GitHub", { x: 1.75, y: 0.72, w: 5, h: 0.9, fontFace: FONT, fontSize: 30, bold: true, color: C.text, valign: "middle" });
+  s.addImage({ path: "../Assets/github-copilot-logo.jpg", x: 0.7, y: 0.7, w: 0.9, h: 0.9, rounding: true });
+  s.addText("GitHub Copilot", { x: 1.75, y: 0.72, w: 6, h: 0.9, fontFace: FONT, fontSize: 30, bold: true, color: C.text, valign: "middle" });
 
   s.addText("From Prompt to Production", {
     x: 0.7, y: 2.3, w: 12, h: 1.0, fontFace: FONT, fontSize: 46, bold: true, color: C.text,
