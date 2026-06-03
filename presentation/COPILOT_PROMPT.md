@@ -42,9 +42,10 @@ Follow the repository's GitHub Actions CI/CD best-practices instructions.
 
 # Agentic workflow (gh-aw) — generate the CI Health report (Part 2)
 
-Use this to author the **agentic** workflow live (optional — a verified
-`.github/workflows/ci-health-report.md` is already committed). gh-aw is a Markdown file with
-YAML frontmatter (`on`, `permissions`, `engine`, `safe-outputs`, `tools`) + a natural-language body.
+Use this to author the **agentic** workflow live (this is the intended Part 2 flow — author it on
+stage, not pre-built). A verified answer-key copy lives in `presentation/reference/ci-health-report.md`
+as a fallback. gh-aw is a Markdown file with YAML frontmatter (`on`, `permissions`, `engine`,
+`safe-outputs`, `tools`) + a natural-language body.
 
 ## Primary prompt (paste this)
 

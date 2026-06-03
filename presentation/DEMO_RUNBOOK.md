@@ -59,21 +59,29 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 **opens an issue** automatically (via `safe-outputs: create-issue`).
 
 **Pre-reqs (set up before the demo — see "Agentic workflow prerequisites" below):**
-- Issues enabled on the repo, the workflow present on the **default branch (`main`)**, and a
-  `COPILOT_GITHUB_TOKEN` secret configured. These are one-time setup steps.
+- Issues enabled on the repo, a `COPILOT_GITHUB_TOKEN` secret configured, and a verified copy of
+  the workflow already on the **default branch (`main`)** so it's dispatchable for the live payoff.
+  These are one-time setup steps. The demo branch's `.github/workflows/` is intentionally clean so
+  you author the workflow **live** on stage.
 
-**On stage:**
+**On stage (author it live — same flow as Part 1):**
 1. Show **Slide 6 (Agentic Workflows)** — frontmatter vs. body, read-only agent, safe outputs.
-2. Open `.github/workflows/ci-health-report.md` in VS Code — read the frontmatter aloud:
-   `on: schedule + workflow_dispatch`, `permissions: …read`, `engine: copilot`,
-   `safe-outputs: create-issue`. Emphasize: *the agent runs read-only; a separate job opens the issue.*
-   *(Optional: generate this file live with the prompt in `COPILOT_PROMPT.md` → "Agentic workflow".)*
-3. Trigger it: **Actions tab → "CI Health & Test-Gap Report" → Run workflow** (or
-   `gh workflow run ci-health-report.lock.yml --ref main`).
-4. Watch the jobs: *activation → agent (read-only) → safe_outputs → detection*.
-5. Open the **Issues** tab → show the new `[ci-health] …` issue the agent wrote.
-6. Closing line: *"That's Continuous AI — the platform doing repo hygiene on its own, with humans
+2. **Generate it live.** In Copilot Chat (agent mode), paste the "Agentic workflow" prompt from
+   `COPILOT_PROMPT.md`. Watch Copilot create `.github/workflows/ci-health-report.md` from scratch.
+3. Read the result aloud as it lands: `on: schedule + workflow_dispatch`, `permissions: …read`,
+   `engine: copilot`, `safe-outputs: create-issue`. Emphasize: *the agent runs read-only; a separate
+   permission-scoped job opens the issue — defense against prompt injection.*
+4. Compile it: `gh aw compile ci-health-report` → produces the `.lock.yml`. Commit & push.
+5. Trigger it: **Actions tab → "CI Health & Test-Gap Report" → Run workflow** (or
+   `gh workflow run ci-health-report.lock.yml --ref main`). *Note: `workflow_dispatch` runs from the
+   default branch, so the verified copy on `main` is what fires — your freshly-authored one matches it.*
+6. Watch the jobs: *activation → agent (read-only) → safe_outputs → detection*.
+7. Open the **Issues** tab → show the new `[ci-health] …` issue the agent wrote.
+8. Closing line: *"That's Continuous AI — the platform doing repo hygiene on its own, with humans
    still the final gate."*
+
+> **Answer key / fallback:** a verified copy lives in `presentation/reference/ci-health-report.md`
+> (+ `.lock.yml`). If the live authoring drifts, copy that into `.github/workflows/` and continue.
 
 ---
 
@@ -84,7 +92,7 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 | Generate workflow | 3–4 min |
 | Commit & push | 1 min |
 | Live Actions run | 2 min |
-| Part 2 — agentic workflow → issue | 3–4 min |
+| Part 2 — author agentic workflow live → issue | 3–4 min |
 
 ## Fallbacks (if something slips)
 - **Agent output is off / won't validate:** the verified `.github/workflows/dotnet-ci.yml` is already
@@ -93,6 +101,8 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 - **Run is slow / queued:** open a previous green run to show the step output while the new one finishes.
 - **Build red unexpectedly:** open the failed step, ask Copilot Chat *"why did this step fail?"* — turns
   a failure into a feature (Copilot-assisted troubleshooting).
+- **Live authoring of the agentic workflow drifts:** copy the verified
+  `presentation/reference/ci-health-report.md` (+ `.lock.yml`) into `.github/workflows/` and continue.
 - **Agentic run fails at "Validate COPILOT_GITHUB_TOKEN":** the token isn't set — fall back to
   `gh issue create --title "[ci-health] CI Health & Test-Gap Report" --body-file <notes>` to show the
   same outcome, or open a previously created `[ci-health]` issue and walk through it.
@@ -116,9 +126,11 @@ The `ci-health-report` agentic workflow (gh-aw) needs the following before it ca
 
 1. **Install the extension** (authoring/compiling): `gh extension install github/gh-aw`
 2. **Enable Issues** on the repo (done): `gh repo edit --enable-issues`
-3. **Put the workflow on the default branch.** `workflow_dispatch` and `schedule` only run from the
-   **default branch (`main`)** — the `.md` + compiled `.lock.yml` are committed to `main` for this reason.
-   Edit `ci-health-report.md`, then recompile with `gh aw compile ci-health-report`.
+3. **Keep a verified copy on the default branch.** `workflow_dispatch` and `schedule` only run from the
+   **default branch (`main`)**, so the verified `.md` + compiled `.lock.yml` are committed to `main`.
+   The **demo branch is intentionally clean** (no `ci-health-report.*` in `.github/workflows/`) so you
+   author it **live** — the answer key lives in `presentation/reference/`. After editing, recompile with
+   `gh aw compile ci-health-report`.
 4. **Configure the Copilot token secret** (required by `engine: copilot`):
    `gh aw secrets bootstrap`  — or set it directly:
    `gh aw secrets set COPILOT_GITHUB_TOKEN --value <token-with-copilot-access>`
