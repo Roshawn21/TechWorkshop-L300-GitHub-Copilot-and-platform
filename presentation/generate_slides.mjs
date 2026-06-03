@@ -92,14 +92,15 @@ function badge(slide, x, y, text, color) {
     ["01", "GitHub Copilot", "Your AI pair programmer — completions, chat, and agents.", C.purple],
     ["02", "Customizing Copilot", "The primitives that ground Copilot in your repo and team.", C.blue],
     ["03", "GitHub Actions", "CI/CD native to GitHub — events, workflows, runners.", C.green],
-    ["04", "Live demo", "Generate a workflow with an agent, push it, watch it run.", C.text],
+    ["04", "Agentic Workflows", "Continuous AI — automation that opens issues & PRs on its own.", C.purple],
+    ["05", "Live demo", "Agent writes CI, push it, watch Actions run + an agentic workflow.", C.text],
   ];
   agenda.forEach((it, i) => {
-    const y = 2.45 + i * 1.05;
-    s.addText(it[0], { x: 0.7, y, w: 1.0, h: 0.9, fontFace: FONT, fontSize: 34, bold: true, color: it[3], valign: "middle" });
-    s.addShape("line", { x: 1.85, y: y + 0.05, w: 0, h: 0.8, line: { color: C.border, width: 1.5 } });
-    s.addText(it[1], { x: 2.1, y: y + 0.02, w: 10.5, h: 0.5, fontFace: FONT, fontSize: 20, bold: true, color: C.text });
-    s.addText(it[2], { x: 2.1, y: y + 0.5, w: 10.5, h: 0.4, fontFace: FONT, fontSize: 14, color: C.muted });
+    const y = 2.35 + i * 0.95;
+    s.addText(it[0], { x: 0.7, y, w: 1.0, h: 0.8, fontFace: FONT, fontSize: 30, bold: true, color: it[3], valign: "middle" });
+    s.addShape("line", { x: 1.85, y: y + 0.05, w: 0, h: 0.72, line: { color: C.border, width: 1.5 } });
+    s.addText(it[1], { x: 2.1, y: y + 0.0, w: 10.5, h: 0.45, fontFace: FONT, fontSize: 19, bold: true, color: C.text });
+    s.addText(it[2], { x: 2.1, y: y + 0.44, w: 10.5, h: 0.4, fontFace: FONT, fontSize: 13.5, color: C.muted });
   });
 }
 
@@ -219,6 +220,48 @@ function badge(slide, x, y, text, color) {
     const y = 4.3 + row * 1.35;
     s.addText([
       { text: it[0] + "  —  ", options: { bold: true, color: C.green } },
+      { text: it[1], options: { color: C.text } },
+    ], { x, y, w: 5.9, h: 1.2, fontFace: FONT, fontSize: 14, valign: "top", lineSpacingMultiple: 1.1 });
+  });
+}
+
+// ---------- Slide 6: Agentic Workflows / Continuous AI ----------
+{
+  const s = pptx.addSlide();
+  base(s, C.purple);
+  badge(s, 0.7, 0.6, "AGENTIC", C.purple);
+  s.addText("Agentic Workflows — Continuous AI", {
+    x: 0.7, y: 1.15, w: 12, h: 0.9, fontFace: FONT, fontSize: 34, bold: true, color: C.text,
+  });
+  s.addText("The same repo knowledge, running in Actions when no one is at the editor.", {
+    x: 0.7, y: 2.0, w: 12, h: 0.5, fontFace: FONT, fontSize: 16, color: C.muted,
+  });
+
+  // Trigger -> Agent (read-only) -> Safe outputs -> Issue / PR
+  const flow = ["Trigger", "Agent (read-only)", "Safe outputs", "Issue / PR"];
+  const fx = 0.7, fy = 2.85, bw = 2.75, gap = 0.42, bh = 0.9;
+  flow.forEach((label, i) => {
+    const x = fx + i * (bw + gap);
+    s.addShape("roundRect", { x, y: fy, w: bw, h: bh, rectRadius: 0.12, fill: { color: C.surface }, line: { color: C.purple, width: 1.5 } });
+    s.addText(label, { x: x + 0.05, y: fy, w: bw - 0.1, h: bh, align: "center", valign: "middle", fontFace: FONT, fontSize: 13.5, bold: true, color: C.text });
+    if (i < flow.length - 1) {
+      s.addText("→", { x: x + bw, y: fy, w: gap, h: bh, align: "center", valign: "middle", fontFace: FONT, fontSize: 18, color: C.purple });
+    }
+  });
+
+  const items = [
+    ["Markdown + frontmatter", "A .md file in .github/workflows: YAML config + plain-English task."],
+    ["Safe outputs", "Agent runs read-only; a separate job opens the issue/PR it requests."],
+    ["Good fits", "Triage, status reports, docs drift, test gaps, routine repo hygiene."],
+    ["This demo", "A scheduled CI Health report that opens an issue — automatically."],
+  ];
+  items.forEach((it, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const x = 0.7 + col * 6.1;
+    const y = 4.2 + row * 1.35;
+    s.addText([
+      { text: it[0] + "  —  ", options: { bold: true, color: C.purple } },
       { text: it[1], options: { color: C.text } },
     ], { x, y, w: 5.9, h: 1.2, fontFace: FONT, fontSize: 14, valign: "top", lineSpacingMultiple: 1.1 });
   });
