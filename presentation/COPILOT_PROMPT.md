@@ -37,3 +37,40 @@ Follow the repository's GitHub Actions CI/CD best-practices instructions.
 - `permissions: contents: read` — least privilege by default.
 - `concurrency` cancels superseded runs → saves runner minutes.
 - The workflow is **just code in the repo** — reviewed in PRs like anything else.
+
+---
+
+# Agentic workflow (gh-aw) — generate the CI Health report (Part 2)
+
+Use this to author the **agentic** workflow live (optional — a verified
+`.github/workflows/ci-health-report.md` is already committed). gh-aw is a Markdown file with
+YAML frontmatter (`on`, `permissions`, `engine`, `safe-outputs`, `tools`) + a natural-language body.
+
+## Primary prompt (paste this)
+
+```
+Create a GitHub Agentic Workflow (gh-aw) at .github/workflows/ci-health-report.md that opens an
+issue summarizing CI health and test-coverage gaps for the Zava app in src/.
+
+Frontmatter:
+- on: a weekday morning schedule (cron) plus workflow_dispatch.
+- engine: copilot
+- permissions (read-only): contents: read, issues: read, pull-requests: read.
+- safe-outputs: create-issue with title-prefix "[ci-health] ", labels [ci-health, automated], max 1.
+- tools: github.
+
+Body: instruct the agent to review the .NET CI workflow's recent runs and the src/ code
+(noting there is no test project yet), then create ONE concise issue with: a short CI-health
+summary, a prioritized "Test-coverage gaps" list, and a "Suggested next steps" checklist using
+- [ ] task items, with links to the relevant files. Do not change code — only report.
+
+Then compile it with `gh aw compile ci-health-report`.
+```
+
+## Talking points (while it generates)
+- **Frontmatter vs. body** — structured control around natural-language intent.
+- **Read-only agent + safe outputs** — the agent can't write; a separate permission-scoped job
+  opens the issue it requests (defense against prompt injection).
+- **Continuous AI** — this is the same repo knowledge running on a schedule, not in the editor.
+- **Setup note:** needs Issues enabled, the workflow on the **default branch**, and a
+  `COPILOT_GITHUB_TOKEN` secret (`gh aw secrets bootstrap`). See `DEMO_RUNBOOK.md`.

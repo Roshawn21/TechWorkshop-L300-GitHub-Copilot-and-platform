@@ -5,7 +5,7 @@ Supporting material for a live demo of **GitHub Copilot + GitHub Actions**.
 ## Contents
 | File | Purpose |
 |---|---|
-| `copilot-actions-overview.pptx` | 5-slide overview deck (GitHub-themed) |
+| `copilot-actions-overview.pptx` | 6-slide overview deck (GitHub-themed) |
 | `generate_slides.mjs` | Reproducible generator for the deck (`pptxgenjs`) |
 | `COPILOT_PROMPT.md` | Ready-to-paste prompt for the live Copilot agent step |
 | `DEMO_RUNBOOK.md` | Step-by-step talk track, timings, and fallbacks |

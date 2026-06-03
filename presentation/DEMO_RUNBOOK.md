@@ -53,13 +53,38 @@ git push
 
 ---
 
-## Timing (≈8–10 min total)
+## 5 · Part 2 — Agentic workflow that opens an Issue (~3–4 min)
+**Story:** *Continuous AI* — the same repo knowledge running in Actions when no one is at the editor.
+A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + recent CI runs and
+**opens an issue** automatically (via `safe-outputs: create-issue`).
+
+**Pre-reqs (set up before the demo — see "Agentic workflow prerequisites" below):**
+- Issues enabled on the repo, the workflow present on the **default branch (`main`)**, and a
+  `COPILOT_GITHUB_TOKEN` secret configured. These are one-time setup steps.
+
+**On stage:**
+1. Show **Slide 6 (Agentic Workflows)** — frontmatter vs. body, read-only agent, safe outputs.
+2. Open `.github/workflows/ci-health-report.md` in VS Code — read the frontmatter aloud:
+   `on: schedule + workflow_dispatch`, `permissions: …read`, `engine: copilot`,
+   `safe-outputs: create-issue`. Emphasize: *the agent runs read-only; a separate job opens the issue.*
+   *(Optional: generate this file live with the prompt in `COPILOT_PROMPT.md` → "Agentic workflow".)*
+3. Trigger it: **Actions tab → "CI Health & Test-Gap Report" → Run workflow** (or
+   `gh workflow run ci-health-report.lock.yml --ref main`).
+4. Watch the jobs: *activation → agent (read-only) → safe_outputs → detection*.
+5. Open the **Issues** tab → show the new `[ci-health] …` issue the agent wrote.
+6. Closing line: *"That's Continuous AI — the platform doing repo hygiene on its own, with humans
+   still the final gate."*
+
+---
+
+## Timing (≈12–14 min total)
 | Segment | Target |
 |---|---|
-| Slides | 1–2 min |
+| Slides | 2–3 min |
 | Generate workflow | 3–4 min |
 | Commit & push | 1 min |
 | Live Actions run | 2 min |
+| Part 2 — agentic workflow → issue | 3–4 min |
 
 ## Fallbacks (if something slips)
 - **Agent output is off / won't validate:** the verified `.github/workflows/dotnet-ci.yml` is already
@@ -68,6 +93,9 @@ git push
 - **Run is slow / queued:** open a previous green run to show the step output while the new one finishes.
 - **Build red unexpectedly:** open the failed step, ask Copilot Chat *"why did this step fail?"* — turns
   a failure into a feature (Copilot-assisted troubleshooting).
+- **Agentic run fails at "Validate COPILOT_GITHUB_TOKEN":** the token isn't set — fall back to
+  `gh issue create --title "[ci-health] CI Health & Test-Gap Report" --body-file <notes>` to show the
+  same outcome, or open a previously created `[ci-health]` issue and walk through it.
 
 ## Reset between runs
 ```bash
@@ -79,4 +107,21 @@ git commit -m "Reset demo workflow" 2>/dev/null
 ## Key talking points to hit
 - Copilot **agents** delegate whole tasks, grounded in *this* repo's context & instructions.
 - Workflows are **code** — versioned, reviewed in PRs, secured (SHA-pin, least privilege, OIDC).
-- The full loop — author, secure, run, troubleshoot — lives on **one platform**.
+- **Agentic Workflows** extend the same primitives into Actions — *Continuous AI* that runs when no
+  one is at the editor, with read-only agents + safe outputs + human review as the final gate.
+- The full loop — author, secure, run, troubleshoot, automate — lives on **one platform**.
+
+## Agentic workflow prerequisites (one-time setup)
+The `ci-health-report` agentic workflow (gh-aw) needs the following before it can run live:
+
+1. **Install the extension** (authoring/compiling): `gh extension install github/gh-aw`
+2. **Enable Issues** on the repo (done): `gh repo edit --enable-issues`
+3. **Put the workflow on the default branch.** `workflow_dispatch` and `schedule` only run from the
+   **default branch (`main`)** — the `.md` + compiled `.lock.yml` are committed to `main` for this reason.
+   Edit `ci-health-report.md`, then recompile with `gh aw compile ci-health-report`.
+4. **Configure the Copilot token secret** (required by `engine: copilot`):
+   `gh aw secrets bootstrap`  — or set it directly:
+   `gh aw secrets set COPILOT_GITHUB_TOKEN --value <token-with-copilot-access>`
+   Without this the run stops at the **"Validate COPILOT_GITHUB_TOKEN secret"** step.
+5. **Dispatch to verify:** `gh workflow run ci-health-report.lock.yml --ref main`, then check the
+   **Issues** tab for the new `[ci-health] …` issue.
