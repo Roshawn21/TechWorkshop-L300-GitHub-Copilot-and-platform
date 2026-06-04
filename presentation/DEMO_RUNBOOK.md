@@ -1,20 +1,27 @@
-# Demo Runbook — GitHub Copilot + GitHub Actions
+# Demo Runbook — Interview Panel: From Prompt to Production (Copilot CLI)
 
 **Audience:** GitHub interview panel (Solutions Engineer III)
 **Repo:** `Roshawn21/TechWorkshop-L300-GitHub-Copilot-and-platform`  ·  **Branch:** `interview-demo`
-**Story:** *"From Prompt to Production"* — generate a CI workflow with a Copilot agent in VS Code,
+**Story:** *"From Prompt to Production"* — generate a CI workflow with a Copilot **CLI** agent,
 push it, and watch GitHub Actions run it live.
+
+> **Two runbooks, same demo assets — both Copilot CLI.** This is the **alternate, more technical**
+> interview-panel track. The **primary interview script** — a mock customer meeting with a slide-by-slide
+> cheat sheet and lines to memorize — lives in **`DEMO_RUNBOOK_CUSTOMER.md`**. Both drive the same
+> underlying assets (the `github-actions-expert` agent, `COPILOT_PROMPT.md`, the `dotnet-ci` workflow,
+> and the `ci-health-report` agentic workflow) from **Copilot CLI**; they differ in audience framing, not
+> tooling. The §0 pre-flight, Fallbacks, and Agentic prerequisites below apply to **both** tracks.
 
 ---
 
 ## 0 · Pre-flight (before you present)
 - [ ] On branch `interview-demo` (`git switch interview-demo`).
-- [ ] VS Code open at repo root; GitHub Copilot signed in; Copilot Chat visible.
+- [ ] Terminal open at repo root; **Copilot CLI** installed and signed in (`copilot` launches).
 - [ ] Browser tab open to the repo's **Actions** tab, logged in.
 - [ ] Open `presentation/copilot-actions-overview.pptx` (slides 1–3).
 - [ ] Reference workflow exists as a safety net: `.github/workflows/dotnet-ci.yml`.
 - [ ] (Recommended) Do one **dry-run push** earlier so you know Actions goes green. See §4.
-- [ ] Close noisy panels / silence notifications; bump editor font size.
+- [ ] Close noisy panels / silence notifications; bump terminal font size.
 
 ---
 
@@ -27,13 +34,14 @@ push it, and watch GitHub Actions run it live.
 - **Slide 5 — Actions:** events → workflows → jobs/steps → runners. Land the tie-in:
   *"Copilot writes the YAML, Actions runs it."*
 
-## 2 · Generate the workflow in VS Code (~3–4 min)
-1. Open **Copilot Chat → Agent mode** (or the repo's `github-actions-expert` agent).
+## 2 · Generate the workflow with Copilot CLI (~3–4 min)
+1. In the terminal, launch **Copilot CLI** (`copilot`) and select the repo's `github-actions-expert`
+   agent.
 2. Paste the prompt from `presentation/COPILOT_PROMPT.md`.
 3. Narrate as it works: it reads the repo, follows the repo's CI/CD **instructions**, writes
    `.github/workflows/dotnet-ci-demo.yml`.
 4. **Review the diff out loud** — call out SHA-pinned actions, `permissions: contents: read`,
-   `concurrency`. Accept the changes.
+   `concurrency`. Approve the changes.
 5. (Optional) One follow-up prompt (e.g., add NuGet caching) to show iteration.
 
 ## 3 · Commit & push (~1 min)
@@ -66,7 +74,7 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 
 **On stage (author it live — same flow as Part 1):**
 1. Show **Slide 6 (Agentic Workflows)** — frontmatter vs. body, read-only agent, safe outputs.
-2. **Generate it live.** In Copilot Chat (agent mode), paste the "Agentic workflow" prompt from
+2. **Generate it live.** In Copilot CLI, paste the "Agentic workflow" prompt from
    `COPILOT_PROMPT.md`. Watch Copilot create `.github/workflows/ci-health-report.md` from scratch.
 3. Read the result aloud as it lands: `on: schedule + workflow_dispatch`, `permissions: …read`,
    `engine: copilot`, `safe-outputs: create-issue`. Emphasize: *the agent runs read-only; a separate
@@ -85,7 +93,31 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 
 ---
 
-## Timing (≈12–14 min total)
+## 6 · Close on security — GitHub Advanced Security (~1 min, talk-track)
+**When:** at the very end, *after* the workflow run is green in GitHub (and after the agentic issue).
+This lands the "secure" half of *write, secure, build, deploy* without slowing the build demo.
+
+> **Say:** *"We just went from prompt to a green pipeline — and as delivery accelerates, security has to
+> keep pace. GitHub Advanced Security folds straight into this same workflow."*
+
+Three pillars, one platform:
+- **Code scanning (CodeQL)** — find vulnerabilities in source on every push/PR.
+- **Secret scanning (+ push protection)** — catch leaked credentials before they merge.
+- **Dependency review / Dependabot** — guard against supply-chain risk in PRs.
+
+> **Shift-left line:** *"Security becomes part of the development workflow, not a separate gate after the
+> fact — same PRs, same Actions, same review loop."*
+
+**Optional live tie-in (if time / already enabled):** open the repo's **Security** tab → show
+*Code scanning*, *Secret scanning*, and *Dependabot* alerts. To enable beforehand: repo **Settings →
+Code security** → turn on CodeQL default setup, Secret scanning + push protection, and the Dependency graph.
+
+> **Closing line:** *"Copilot wrote it, Actions ran it, Advanced Security hardened it — write, secure,
+> build, and deploy on one platform."*
+
+---
+
+## Timing (≈13–15 min total)
 | Segment | Target |
 |---|---|
 | Slides | 2–3 min |
@@ -93,13 +125,14 @@ A scheduled **CI Health & Test-Gap Report** agentic workflow reviews the app + r
 | Commit & push | 1 min |
 | Live Actions run | 2 min |
 | Part 2 — author agentic workflow live → issue | 3–4 min |
+| Close on security — GHAS talk-track | 1 min |
 
 ## Fallbacks (if something slips)
 - **Agent output is off / won't validate:** the verified `.github/workflows/dotnet-ci.yml` is already
   committed — push that instead and keep narrating.
 - **No internet for the agent:** show the committed `dotnet-ci.yml` and explain it as if generated.
 - **Run is slow / queued:** open a previous green run to show the step output while the new one finishes.
-- **Build red unexpectedly:** open the failed step, ask Copilot Chat *"why did this step fail?"* — turns
+- **Build red unexpectedly:** open the failed step, ask Copilot CLI *"why did this step fail?"* — turns
   a failure into a feature (Copilot-assisted troubleshooting).
 - **Live authoring of the agentic workflow drifts:** copy the verified
   `presentation/reference/ci-health-report.md` (+ `.lock.yml`) into `.github/workflows/` and continue.
@@ -120,6 +153,8 @@ git commit -m "Reset demo workflow" 2>/dev/null
 - **Agentic Workflows** extend the same primitives into Actions — *Continuous AI* that runs when no
   one is at the editor, with read-only agents + safe outputs + human review as the final gate.
 - The full loop — author, secure, run, troubleshoot, automate — lives on **one platform**.
+- **GitHub Advanced Security** (code scanning, secret scanning, dependency review) folds into the same
+  Actions/PR workflow — close on it to land *write, **secure**, build, deploy* on one platform.
 
 ## Agentic workflow prerequisites (one-time setup)
 The `ci-health-report` agentic workflow (gh-aw) needs the following before it can run live:
