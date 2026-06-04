@@ -17,7 +17,11 @@ on:
       - ".github/workflows/ci-health-report.md"
       - ".github/workflows/ci-health-report.lock.yml"
 
-engine: copilot
+# Pin a broadly-available Copilot model. The default (claude-sonnet-4.6) is not
+# entitled on this account's subscription tier, so request a GPT model instead.
+engine:
+  id: copilot
+  model: gpt-5-mini
 
 # The agent runs read-only. Writes happen only through safe-outputs.
 permissions:
