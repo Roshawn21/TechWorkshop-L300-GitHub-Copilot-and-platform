@@ -18,6 +18,10 @@ push it, and watch GitHub Actions run it live.
 - [ ] On branch `interview-demo` (`git switch interview-demo`).
 - [ ] Terminal open at repo root; **Copilot CLI** installed and signed in (`copilot` launches).
 - [ ] Browser tab open to the repo's **Actions** tab, logged in.
+- [ ] (For the "why CLI" beat) Be ready to run the Zava app **inside VS Code**:
+  `dotnet run --project src/ZavaStorefront.csproj` (serves on `https://localhost:5001`), then
+  Command Palette → **"Simple Browser: Show"** → `https://localhost:5001`. This lets you show the app in
+  the integrated browser *while* prompting Copilot in the terminal (CLI runs commands + prompts at once).
 - [ ] Open `presentation/copilot-actions-overview.pptx` (slides 1–3).
 - [ ] Reference workflow exists as a safety net: `.github/workflows/dotnet-ci.yml`.
 - [ ] (Recommended) Do one **dry-run push** earlier so you know Actions goes green. See §4.
