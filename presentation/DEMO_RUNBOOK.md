@@ -188,8 +188,10 @@ The `ci-health-report` agentic workflow (gh-aw) needs the following before it ca
      or `gh aw secrets set COPILOT_GITHUB_TOKEN --value <github_pat_…>`.
    - Without a valid token the run stops at **"Validate COPILOT_GITHUB_TOKEN secret"**; with the wrong
      account it fails later at the **agent** step with the `400 model not supported` error above.
-   - The workflow pins `engine.model: gpt-5-mini` (the default `claude-sonnet-4.6` isn't entitled on this
-     tier). `gpt-5-mini` is verified available for the `Roshawn21` account.
+   - The workflow pins `engine.model: gpt-4o` (the default `claude-sonnet-4.6` and `gpt-5-mini` both return
+     `400 model not supported` for this account's PAT-based Copilot session). `gpt-4o` is **verified green**
+     end-to-end (run 26931879982 on `main` and run 26932000444 via push on `interview-demo-2`, which
+     created issues `[ci-health] …` #2 and #3).
 5. **Dress-rehearse before the demo (do this once it's set — proves the exact live path is green):**
    ```
    gh workflow run ci-health-report.lock.yml -R Roshawn21/GitHub-Demo --ref main

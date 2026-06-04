@@ -9,7 +9,12 @@ on:
   # ...and can be dispatched on demand for the live demo.
   workflow_dispatch:
 
-engine: copilot
+# Pin a broadly-available Copilot model. The default (claude-sonnet-4.6) and gpt-5-mini
+# both return 400 model-not-supported for this account's PAT-based Copilot session;
+# gpt-4o is verified working end-to-end.
+engine:
+  id: copilot
+  model: gpt-4o
 
 # The agent runs read-only. Writes happen only through safe-outputs.
 permissions:
