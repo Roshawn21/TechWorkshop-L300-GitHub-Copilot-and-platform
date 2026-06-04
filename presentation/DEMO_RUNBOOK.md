@@ -140,9 +140,12 @@ Code security** → turn on CodeQL default setup, Secret scanning + push protect
   a failure into a feature (Copilot-assisted troubleshooting).
 - **Live authoring of the agentic workflow drifts:** copy the verified
   `presentation/reference/ci-health-report.md` (+ `.lock.yml`) into `.github/workflows/` and continue.
-- **Agentic run fails at "Validate COPILOT_GITHUB_TOKEN":** the token isn't set — fall back to
-  `gh issue create --title "[ci-health] CI Health & Test-Gap Report" --body-file <notes>` to show the
-  same outcome, or open a previously created `[ci-health]` issue and walk through it.
+- **Agentic run fails at "Validate COPILOT_GITHUB_TOKEN" or the agent step (`400 model not supported`):**
+  the token is missing or owned by the wrong account (see Agentic prerequisites #4). **Break-glass:** a
+  ready-to-paste issue body is staged at `presentation/reference/ci-health-fallback-issue.md` — run
+  `gh issue create -R Roshawn21/GitHub-Demo --title "[ci-health] CI Health & Test-Gap Report"
+  --label "ci-health,automated" --body-file presentation/reference/ci-health-fallback-issue.md` to show
+  the same outcome, or open a previously created `[ci-health]` issue and walk through it.
 
 ## Reset between runs
 ```bash
@@ -170,9 +173,33 @@ The `ci-health-report` agentic workflow (gh-aw) needs the following before it ca
    The **demo branch is intentionally clean** (no `ci-health-report.*` in `.github/workflows/`) so you
    author it **live** — the answer key lives in `presentation/reference/`. After editing, recompile with
    `gh aw compile ci-health-report`.
-4. **Configure the Copilot token secret** (required by `engine: copilot`):
-   `gh aw secrets bootstrap`  — or set it directly:
-   `gh aw secrets set COPILOT_GITHUB_TOKEN --value <token-with-copilot-access>`
-   Without this the run stops at the **"Validate COPILOT_GITHUB_TOKEN secret"** step.
-5. **Dispatch to verify:** `gh workflow run ci-health-report.lock.yml --ref main`, then check the
-   **Issues** tab for the new `[ci-health] …` issue.
+4. **Configure the Copilot token secret** (required by `engine: copilot`) — **this is the #1 thing that
+   breaks the live run, so get it exactly right:**
+   - It **must be a fine-grained PAT** (`github_pat_…`). **OAuth tokens (`gho_…`) and GitHub Apps are
+     rejected** by gh-aw's validator — `gh auth token` gives an OAuth token, so do **not** use it.
+   - Create it here (pre-fills name + the required permission):
+     `https://github.com/settings/personal-access-tokens/new?name=COPILOT_GITHUB_TOKEN&user_copilot_requests=read`
+   - **Resource owner = the user account that has a Copilot license** (here: **`Roshawn21`**, *not* an org,
+     *not* a different personal account). A PAT owned by an account without Copilot access passes
+     validation but then fails inference with **`400 The requested model is not supported`**.
+   - **Repository access →** *Only select repositories* → **GitHub-Demo**.
+   - **Account permissions → Copilot Requests = Read.**
+   - Set it: `gh secret set COPILOT_GITHUB_TOKEN -R Roshawn21/GitHub-Demo` (paste the `github_pat_…` value),
+     or `gh aw secrets set COPILOT_GITHUB_TOKEN --value <github_pat_…>`.
+   - Without a valid token the run stops at **"Validate COPILOT_GITHUB_TOKEN secret"**; with the wrong
+     account it fails later at the **agent** step with the `400 model not supported` error above.
+   - The workflow pins `engine.model: gpt-5-mini` (the default `claude-sonnet-4.6` isn't entitled on this
+     tier). `gpt-5-mini` is verified available for the `Roshawn21` account.
+5. **Dress-rehearse before the demo (do this once it's set — proves the exact live path is green):**
+   ```
+   gh workflow run ci-health-report.lock.yml -R Roshawn21/GitHub-Demo --ref main
+   gh run list -R Roshawn21/GitHub-Demo --workflow=ci-health-report.lock.yml --limit 1   # wait for "completed  success"
+   ```
+   Then check the **Issues** tab for the new `[ci-health] …` issue. **If this rehearsal is green, the live
+   demo is guaranteed** — keep that issue/green run open as a visible fallback.
+6. **Trigger options during the live demo:**
+   - **Dispatch (most reliable, one command):**
+     `gh workflow run ci-health-report.lock.yml -R Roshawn21/GitHub-Demo --ref main`
+   - **From the demo branch (best narrative — shows it firing off `interview-demo-2`):** the workflow has a
+     path-scoped `push` trigger, so committing the authored `ci-health-report.md`/`.lock.yml` to
+     `interview-demo-2` runs it immediately.
