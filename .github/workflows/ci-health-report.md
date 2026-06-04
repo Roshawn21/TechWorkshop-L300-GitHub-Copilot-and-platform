@@ -21,7 +21,7 @@ on:
 # entitled on this account's subscription tier, so request a GPT model instead.
 engine:
   id: copilot
-  model: gpt-5-mini
+  model: gpt-4o
 
 # The agent runs read-only. Writes happen only through safe-outputs.
 permissions:
