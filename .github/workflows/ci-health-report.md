@@ -6,8 +6,16 @@ on:
   # Runs automatically on weekday mornings (13:00 UTC ≈ 9am ET)...
   schedule:
     - cron: "0 13 * * 1-5"
-  # ...and can be dispatched on demand for the live demo.
+  # ...and can be dispatched on demand from the default branch.
   workflow_dispatch:
+  # Live-demo trigger: a push to the demo branch that touches this workflow
+  # runs it immediately (workflow_dispatch/schedule only fire from the default
+  # branch, but push runs from the branch where it occurs).
+  push:
+    branches: ["interview-demo", "interview-demo-2"]
+    paths:
+      - ".github/workflows/ci-health-report.md"
+      - ".github/workflows/ci-health-report.lock.yml"
 
 engine: copilot
 
